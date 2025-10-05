@@ -12,8 +12,12 @@
     "react-dom": "^18.3.0"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "vite": "^5.0.0",
     "@vitejs/plugin-react": "^4.1.0"
+=======
+  "vite": "^5.0.0"
+>>>>>>> 33f731d3bb7086790d84b5eac170f01b9ba4df73
   }
 }
   
