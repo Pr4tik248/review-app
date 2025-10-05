@@ -1,47 +1,19 @@
 import express from "express";
-import pkg from "pg";
-const { Pool } = pkg;
-import jwt from "jsonwebtoken";
 
 const router = express.Router();
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+let posts = [
+  { id: 1, title: "Welcome to the University Review Platform!", content: "Test post" }
+];
 
-// Middleware to verify JWT
-function authMiddleware(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: "No token" });
-  const token = authHeader.split(" ")[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch {
-    res.status(401).json({ error: "Invalid token" });
-  }
-}
-
-// Create Post
-router.post("/", authMiddleware, async (req, res) => {
-  const { title, content } = req.body;
-  try {
-    const result = await pool.query(
-      "INSERT INTO posts (user_id, title, content) VALUES ($1, $2, $3) RETURNING *",
-      [req.user.id, title, content]
-    );
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+router.get("/", (req, res) => {
+  res.json(posts);
 });
 
-// Get All Posts
-router.get("/", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM posts ORDER BY id DESC");
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+router.post("/", (req, res) => {
+  const { title, content } = req.body;
+  const newPost = { id: posts.length + 1, title, content };
+  posts.push(newPost);
+  res.status(201).json(newPost);
 });
 
 export default router;
