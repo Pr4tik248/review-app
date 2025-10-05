@@ -10,3 +10,5 @@ app.use("/api/posts", postRoutes); // must match frontend fetch path
 
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
