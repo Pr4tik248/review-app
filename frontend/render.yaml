@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: review-backend
+    repo: https://github.com/Pr4tik248/review-app     # <-- Replace with your GitHub repo
+    branch: main                                      # <-- Replace if using a different branch
+    env: node
+    buildCommand: cd backend && npm ci
+    startCommand: cd backend && node server.js
+    envVars:
+      - key: DATABASE_URL
+        value: postgres://review_db_ch35_user:YS7cKQayDsEUWT4mbEaO4bzybbDI1mFB@dpg-d3h0hnnfte5s73ch3ceg-a:5432/review_db_ch35
+        # <-- Replace YOUR_PASSWORD with your actual database password
+      - key: JWT_SECRET
+        value: supersecret123
+      - key: NODE_ENV
+        value: production
+
+  - type: static
+    name: review-frontend
+    repo: https://github.com/Pr4tik248/review-app  # <-- Same repo as above
+    branch: main                                      # <-- Replace if needed
+    buildCommand: cd frontend && npm ci && npm run build
+    publishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://review-backend.onrender.com   # <-- Backend URL after deployment
